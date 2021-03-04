@@ -28,7 +28,7 @@ public class SapDesadvToCevaPurordRoute extends RouteBuilder{
         from("{{sap.connection.endpoint}}")
         .routeId(getClass().getSimpleName())
         .convertBodyTo(String.class)   						    //uses default type converter from fusesource to convert IDoc to XML
-        .setHeader(Exchange.FILE_NAME, simple("{{file.IDOC.name}}"))
+        // .setHeader(Exchange.FILE_NAME, simple("{{file.IDOC.name}}"))
         .log(LoggingLevel.INFO, logger, "Received OrdRsp file ${file:name} from SAP.")
         .wireTap("{{file.IDOC.backup}}").id("backupIDoc").end() //this ends only the wiretap definition and does not affect the rest of the route
         .setHeader("iDocNumber", xpath("//idoc:DocumentList/document/@iDocNumber")

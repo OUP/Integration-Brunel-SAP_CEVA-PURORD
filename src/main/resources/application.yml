@@ -25,12 +25,12 @@ ftp:
 
 sap:
   connection:
-    gwhost: INDSAPDEV.in.oup.com
+    gwhost: 10.45.6.7
     gwserv: sapgw00
     progid: IND_BRUNEL_DESADV_OD
     client: 21
-    user: CHINTHAR
-    passwd: Sainath-3
+    user: PATHAKS
+    passwd: Spathak@1*
     lang: EN
     group: 
     mshost: 10.45.6.7
@@ -43,8 +43,8 @@ sap:
     senderPartnerNumber: INDCLNT174
     idocType: DELVRY03
     messageType: DESADV
-    endpoint: sap-idoclist-server:sapOutbound:DELVRY03
-    # endpoint: file:outbox
+    # endpoint: sap-idoclist-server:sapOutbound:DELVRY03
+    endpoint: file:inbox
 
 file:
   location: backup

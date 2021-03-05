@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.oup.integration.brunel</groupId>
-	<artifactId>purord-outbound</artifactId>
+	<artifactId>purord-insdes-outbound</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>purord-outbound</name>
+	<name>purord-insdes-outbound</name>
 	<description>SAP DESADV to CEVA PURORD</description>
 	<properties>
 		<java.version>1.8</java.version>

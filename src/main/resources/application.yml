@@ -5,21 +5,20 @@ spring:
   profiles:
     active: default
   application:
-    name: Integration-Brunel-SAP_CEVA-PURORD
+    name: Integration-Brunel-SAP_CEVA-PURORD-INSDES
 
 ftp:
   ceva:
     server: ukftp-auto.oup.com
-    pickuplocation: 
-      plant1: to_OUP/plant_7410/RECADV
-      plant2: to_OUP/plant_7430/RECADV
+    dropLocation: to_OUP/plant_$simple{header.plantCode}/$simple{header.CevaDeliveryType}
     port: 22
     username: brunel_test_OUP
     password: RAW(!D9ElUcMktDLIqd&J^6Ye)
-    fileFilter: cevaextract_*.xml
-    ftpOptions: username=${ftp.ceva.username}&password=${ftp.ceva.password}&antInclude=${ftp.ceva.fileFilter}&useUserKnownHostsFile=false&delete=true&sortBy=file:modified
-    sftpPathPlant1: file:plant_7410
-    sftpPathPlant2: file:plant_7430
+    ftpFileName: $simple{file:name}
+    # ftpFileName: ORDRSP_$simple{header.idocNumber}_$simple{date:now:yyyyMMddHHmmss}.xml
+    ftpOptions: fileName=${ftp.ceva.ftpFileName}&doneFileName=$simple{file:name.noext}.go&throwExceptionOnConnectFailed=true&maximumReconnectAttempts=0&passiveMode=true
+    ftpPath: sftp:${ftp.ceva.username}:${ftp.ceva.password}@${ftp.ceva.server}:${ftp.ceva.port}/${ftp.ceva.droplocation}?${ftp.ceva.ftpOptions}
+    # ftpPath: file:plant_$simple{header.plantCode}
     # sftpPathPlant1: sftp:{{ftp.ceva.server}}:{{ftp.ceva.port}}/{{ftp.ceva.pickuplocation.plant1}}?{{ftp.ceva.ftpOptions}}
     # sftpPathPlant2: sftp:{{ftp.ceva.server}}:{{ftp.ceva.port}}/{{ftp.ceva.pickuplocation.plant2}}?{{ftp.ceva.ftpOptions}}
 
@@ -50,11 +49,11 @@ file:
   location: backup
   # location: /OUT/${spring.application.name}
   IDOC: 
-    name: SAP-DESADV-$simple{exchangeId}.xml
-    backup: file:${file.location}/01-FromSAP/$simple{date:now:yyyy/MM/dd}
+    name: SAP-$simple{header.iDocNumber}_$simple{header.VBELN}.xml
+    backup: file:${file.location}/01-FromSAP/$simple{header.CevaDeliveryType}/$simple{date:now:yyyy/MM/dd}
   XML: 
-    name: CEVA-PURORD-$simple{header.iDocNumber}_$simple{header.VBELN}.xml
-    backup: file:${file.location}/02-ToCEVA/$simple{date:now:yyyy/MM/dd}
+    name: CEVA-$simple{header.iDocNumber}_$simple{header.VBELN}.xml
+    backup: file:${file.location}/02-ToCEVA/$simple{header.CevaDeliveryType}/$simple{date:now:yyyy/MM/dd}
 
 ---
 
@@ -101,9 +100,9 @@ sap:
 
 file:
   location: /OUT/${spring.application.name}
-  XML: 
-    name: CEVA-PURORD-$simple{header.iDocNumber}_$simple{header.OrderID}.xml
-    backup: file:${file.location}/01-FromCEVA/$simple{date:now:yyyy/MM/dd}
   IDOC: 
-    name: SAP-DESADV-$simple{exchangeId}.xml
-    backup: file:${file.location}/02-ToSAP/$simple{date:now:yyyy/MM/dd}
+    name: SAP-DESADV-$simple{header.iDocNumber}_$simple{header.VBELN}.xml
+    backup: file:${file.location}/01-FromSAP/$simple{header.CevaDeliveryType}/$simple{date:now:yyyy/MM/dd}
+  XML: 
+    name: CEVA-PURORD-$simple{header.iDocNumber}_$simple{header.VBELN}.xml
+    backup: file:${file.location}/02-ToCEVA/$simple{header.CevaDeliveryType}/$simple{date:now:yyyy/MM/dd}

@@ -1,4 +1,4 @@
-package com.oup.integration.brunel.purordoutbound.configurations;
+package com.oup.integration.brunel.purord_insdes_outbound.configurations;
 
 import java.util.HashMap;
 import java.util.Map;

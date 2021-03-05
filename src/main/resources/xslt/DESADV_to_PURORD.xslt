@@ -59,67 +59,51 @@
                         <xsl:value-of select="segmentChildren/E1EDL24[@LGORT != ''][1]/@LGORT" />
                     </OrganizationReference>
                 </xsl:if>
-                <WareHouseOrderType></WareHouseOrderType>
-                <!-- section for Bill of Lading TBC 
-            <DeliveryNoteText>
-                <Qualifier>Value to be confirmed</Qualifier>
-                <Value>BOL value</Value>
-            </DeliveryNoteText>
-                ***** OR *****
-            <InvoiceText>
-                <Qualifier>String</Qualifier>
-                <Value>String</Value>
-            </InvoiceText>
-            -->
-
+                <xsl:if test="segmentChildren/E1EDL21[@LFART != ''][1]">
+                    <WareHouseOrderType>
+                        <xsl:value-of select="segmentChildren/E1EDL21[@LFART != ''][1]/@LFART" />
+                    </WareHouseOrderType>
+                </xsl:if>
+               
                 <FromLocation>
-                    <LocationID>NL-ROS-05</LocationID>
+                    <xsl:if test="segmentChildren/E1EDL24[@WERKS != ''][1]">
+                        <LocationID><xsl:value-of select="segmentChildren/E1EDL24[@WERKS != ''][1]/@WERKS"/></LocationID>
+                    </xsl:if>
                     <LocationQualifier>SF</LocationQualifier>
-                    <Name1>CEVA WAREHOUSE</Name1>
-                    <Name2>CEVA WAREHOUSE</Name2>
-                    <Name3>CEVA WAREHOUSE</Name3>
-                    <Address1>BOEKERMAN 5</Address1>
-                    <Address2>OUD-GASTEL</Address2>
-                    <Address3>OUD-GASTEL</Address3>
-                    <City>ROOSENDAAL</City>
-                    <PostalCode>4751 XK</PostalCode>
-                    <CountryCode>NL</CountryCode>
+                    <xsl:if test="segmentChildren/E1ADRM1[@PARTNER_Q = 'LF']">
+                        <Name1><xsl:value-of select="segmentChildren/E1ADRM1[@PARTNER_Q = 'LF']/@NAME1"/></Name1>
+                        <xsl:if test="segmentChildren/E1ADRM1[@PARTNER_Q = 'LF']/@NAME2 != ''">
+                            <Name2><xsl:value-of select="segmentChildren/E1ADRM1[@PARTNER_Q = 'LF']/@NAME2"/></Name2>
+                        </xsl:if>
+                        <xsl:if test="segmentChildren/E1ADRM1[@PARTNER_Q = 'LF']/@NAME3 != '' ">
+                            <Name3><xsl:value-of select="segmentChildren/E1ADRM1[@PARTNER_Q = 'LF']/@NAME3"/></Name3>
+                        </xsl:if>
+                        <Address1><xsl:value-of select="segmentChildren/E1ADRM1[@PARTNER_Q = 'LF']/@STREET1"/></Address1>
+                        <xsl:if test="segmentChildren/E1ADRM1[@PARTNER_Q = 'LF']/@NAME2 != ''">
+                            <Address2><xsl:value-of select="segmentChildren/E1ADRM1[@PARTNER_Q = 'LF']/@STREET2"/></Address2>
+                        </xsl:if>
+                        <xsl:if test="segmentChildren/E1ADRM1[@PARTNER_Q = 'LF']/@NAME3 != '' ">
+                            <Address3><xsl:value-of select="segmentChildren/E1ADRM1[@PARTNER_Q = 'LF']/@STREET3"/></Address3>
+                        </xsl:if>
+                        <City><xsl:value-of select="segmentChildren/E1ADRM1[@PARTNER_Q = 'LF']/@CITY1"/></City>
+                        <PostalCode><xsl:value-of select="segmentChildren/E1ADRM1[@PARTNER_Q = 'LF']/@POSTL_COD1"/></PostalCode>
+                        <CountryCode><xsl:value-of select="segmentChildren/E1ADRM1[@PARTNER_Q = 'LF']/@COUNTRY1"/></CountryCode>
+                    </xsl:if>
                 </FromLocation>
                 <ToLocation>
-                    <LocationID>NL-ROS-06</LocationID>
-                    <LocationQualifier>ST</LocationQualifier>
-                    <Name1>CEVA Freight (UK) Limited</Name1>
-                    <Name2 />
-                    <Name3 />
-                    <Address1>Heathrow Gateway</Address1>
-                    <Address2>Godfrey Way</Address2>
-                    <Address3 />
-                    <City>Hounslow</City>
-                    <PostalCode>TW4 5SY</PostalCode>
-                    <CountryCode>GB</CountryCode>
                 </ToLocation>
-                <OrderLine>
-                    <ActionCode>NEW</ActionCode>
-                    <LineId>6</LineId>
-                    <ProductId>4549337285248</ProductId>
-                    <Description>SOLID OAK BED SINGLE</Description>
-                    <UOM>EA</UOM>
-                    <QuantityPerUOM>1</QuantityPerUOM>
-                    <QuantityOrdered>33</QuantityOrdered>
-                    <QuantityExpected>33</QuantityExpected>
-                    <Status>A</Status>
-                </OrderLine>
-                <OrderLine>
-                    <ActionCode>NEW</ActionCode>
-                    <LineId>7</LineId>
-                    <OriginalLineId>7</OriginalLineId>
-                    <ProductId>4549337285262</ProductId>
-                    <Description>SOLID OAK BED DOUBLE</Description>
-                    <UOM>EA</UOM>
-                    <QuantityPerUOM>1</QuantityPerUOM>
-                    <QuantityOrdered>41</QuantityOrdered>
-                    <QuantityExpected>41</QuantityExpected>
-                </OrderLine>
+                <xsl:for-each select="segmentChildren/E1EDL24">
+                    <OrderLine>
+                        <ActionCode>NEW</ActionCode>
+                        <LineId><xsl:value-of select="@POSNR"/></LineId>
+                        <OriginalLineId><xsl:value-of select="@VGPOS"/></OriginalLineId>
+                        <ProductId><xsl:value-of select="@MATNR"/></ProductId>
+                        <Description><xsl:value-of select="@ARKTX"/></Description>
+                        <UOM><xsl:value-of select="if(@VRKME = 'CPY') then 'EA' else ()"/></UOM>
+                        <QuantityPerUOM>1</QuantityPerUOM>
+                        <QuantityExpected><xsl:value-of select="@LFIMG"/></QuantityExpected>
+                    </OrderLine>
+                </xsl:for-each>
             </OrderSection>
         </Purord>
     </xsl:template>

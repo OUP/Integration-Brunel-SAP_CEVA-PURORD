@@ -8,7 +8,9 @@
                 <InterFaceID>S-010.00</InterFaceID>
                 <InterFaceName>PURORD</InterFaceName>
                 <InterChangeID>64284794</InterChangeID>
-                <TransferDTstamp>21210221104500</TransferDTstamp>
+                <xsl:variable name="cd" select="//idoc:DocumentList/document/@creationDate"/>
+                <xsl:variable name="ct" select="//idoc:DocumentList/document/@creationTime"/>
+                <TransferDTstamp><xsl:value-of select="format-dateTime(xs:dateTime(replace(concat(substring-before($cd, 'T'), 'T', substring-after($ct, 'T')), '\+\d{2}', '$0:')), '[Y0001][M01][D01][H01][m01][s01]')"/></TransferDTstamp>
                 <SenderData>
                     <RoutingID1>OUP-7430</RoutingID1>
                     <RoutingID2>IN-7430</RoutingID2>
@@ -27,7 +29,6 @@
                     <MessageOwner>CEVA</MessageOwner>
                 </InterfaceReferences>
             </InterchangeSection>
-
             <OrderSection>
                 <ActionCode>NEW</ActionCode>
                 <OrderID>
